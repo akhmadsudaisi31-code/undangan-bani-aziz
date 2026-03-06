@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khaul & Silaturahmi Akbar KH. Abd Aziz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #064e3b;
+            --accent-green: #15803d;
+            --bg-cream: #f4f3ee;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-cream);
+            color: #1a202c;
+            overflow: hidden;
+            scroll-behavior: smooth;
+        }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-arabic { font-family: 'Amiri', serif; }
+
+        /* Diagonal Pattern Background */
+        .bg-pattern {
+            background-color: var(--bg-cream);
+            background-image:  repeating-linear-gradient(45deg, #e5e5f7 0, #e5e5f7 1px, transparent 0, transparent 50%);
+            background-size: 10px 10px;
+            background-attachment: fixed;
+            opacity: 0.5;
+        }
+
+        /* Envelope Styles */
+        .envelope-wrapper {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            background: linear-gradient(135deg, #064e3b 0%, #042f24 100%);
+            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background: #ffffff;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            cursor: pointer;
+            transition: transform 0.6s ease;
+        }
+        .flap {
+            position: absolute;
+            top: 0; width: 0; height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #e2ddd0;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+            z-index: 30;
+        }
+        .envelope.open .flap { transform: rotateX(180deg); z-index: 10; }
+        .pocket {
+            position: absolute;
+            bottom: 0; width: 0; height: 0;
+            border-left: 150px solid #ffffff;
+            border-right: 150px solid #ffffff;
+            border-bottom: 100px solid #f8f8f8;
+            z-index: 20;
+        }
+        .letter {
+            position: absolute;
+            bottom: 5px; left: 10px;
+            width: 280px; height: 160px;
+            background: white;
+            z-index: 15;
+            transition: transform 0.8s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .envelope.open .letter { transform: translateY(-110px); }
+        .wax-seal {
+            position: absolute;
+            top: 90px; left: 130px;
+            width: 40px; height: 40px;
+            background: #8b0000;
+            border-radius: 50%;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffd700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: opacity 0.4s;
+        }
+        .envelope.open .wax-seal { opacity: 0; pointer-events: none; }
+
+        /* Main UI Elements */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .shadow-3d {
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.03);
+        }
+        .seconds-box {
+            background: var(--primary-green);
+            color: white;
+            box-shadow: 0 10px 20px rgba(6, 78, 59, 0.3);
+        }
+
+        @keyframes rotate-slow { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+        .animate-rotate { animation: rotate-slow 10s linear infinite; }
+
+        #main-wrapper { visibility: hidden; opacity: 0; transition: opacity 1s ease; }
+        .is-visible { visibility: visible !important; opacity: 1 !important; overflow-y: auto !important; }
+    </style>
+</head>
+<body data-bg-music="Jiwa Yang Bersedih - Ghea Indrawari Piano Karaoke by Andre Panggabean.m4a.mp4">
+
+    <!-- Audio Player Background -->
+    <audio id="bgMusic" loop preload="auto"></audio>
+
+    <!-- SPLASH: ENVELOPE -->
+    <div id="envelope-screen" class="envelope-wrapper">
+        <div class="text-center" data-aos="zoom-in">
+            <p class="text-emerald-100 text-[9px] font-bold tracking-[0.5em] uppercase mb-12 animate-pulse">Klik Segel Hati Untuk Membuka</p>
+            <div id="envelope-body" class="envelope" onclick="triggerOpen()">
+                <div class="flap"></div>
+                <div class="pocket"></div>
+                <div class="letter">
+                    <p class="font-serif italic text-emerald-900 text-[10px] mb-1">Undangan Untuk</p>
+                    <h4 class="font-bold text-[11px] tracking-widest text-emerald-950 uppercase leading-tight">Keluarga Besar <br> KH. Abd Aziz</h4>
+                    <div class="w-8 h-[1px] bg-emerald-100 mx-auto mt-3"></div>
+                </div>
+                <div class="wax-seal">
+                    <i data-lucide="heart" class="fill-current w-5 h-5"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN PAGE -->
+    <div id="main-wrapper" class="min-h-screen relative">
+        <div class="bg-pattern absolute inset-0 z-0"></div>
+
+        <!-- Floating Music Icon -->
+        <div class="fixed top-8 right-8 z-[500]">
+            <button onclick="toggleMusic()" class="bg-white/90 backdrop-blur-md w-14 h-14 rounded-full flex items-center justify-center text-emerald-800 shadow-xl border border-emerald-50">
+                <i data-lucide="music-2" id="music-icon" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- HERO CONTENT -->
+        <section class="relative z-10 min-h-screen flex flex-col items-center justify-center px-8 text-center pt-24">
+            
+            <div class="mb-12" data-aos="fade-up" data-aos-duration="1500">
+                <span class="inline-block px-6 py-2 rounded-full bg-white/80 border border-emerald-50 text-emerald-800 text-[10px] font-black uppercase tracking-[0.4em] mb-12 shadow-sm">
+                    Gema Rindu & Doa Leluhur
+                </span>
+                
+                <h1 class="text-5xl md:text-8xl font-serif text-emerald-950 font-black leading-[1.1] mb-6">
+                    Menyambung <br>
+                    <span class="italic text-emerald-600">Sanad</span>, <br>
+                    Mempererat Nasab
+                </h1>
+                
+                <p class="text-sm md:text-xl text-slate-400 font-medium max-w-xl mx-auto italic leading-relaxed px-4 mb-16">
+                    "Khaul Sesepuh: Sejenak menunduk mendoakan mereka yang menjadi akar perjuangan kita."
+                </p>
+
+                <!-- IDENTICAL COUNTDOWN UI -->
+                <div class="flex justify-center gap-4 md:gap-6">
+                    <div class="bg-white w-20 h-24 md:w-28 md:h-32 rounded-3xl shadow-3d flex flex-col items-center justify-center">
+                        <span id="days" class="text-3xl md:text-4xl font-black text-emerald-950">00</span>
+                        <span class="text-[9px] font-bold uppercase tracking-widest opacity-40 mt-1">Hari</span>
+                    </div>
+                    <div class="bg-white w-20 h-24 md:w-28 md:h-32 rounded-3xl shadow-3d flex flex-col items-center justify-center">
+                        <span id="hours" class="text-3xl md:text-4xl font-black text-emerald-950">00</span>
+                        <span class="text-[9px] font-bold uppercase tracking-widest opacity-40 mt-1">Jam</span>
+                    </div>
+                    <div class="bg-white w-20 h-24 md:w-28 md:h-32 rounded-3xl shadow-3d flex flex-col items-center justify-center">
+                        <span id="minutes" class="text-3xl md:text-4xl font-black text-emerald-950">00</span>
+                        <span class="text-[9px] font-bold uppercase tracking-widest opacity-40 mt-1">Menit</span>
+                    </div>
+                    <div class="seconds-box w-20 h-24 md:w-28 md:h-32 rounded-3xl flex flex-col items-center justify-center">
+                        <span id="seconds" class="text-3xl md:text-4xl font-black">00</span>
+                        <span class="text-[9px] font-bold uppercase tracking-widest opacity-60 mt-1 text-emerald-100">Detik</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="animate-bounce opacity-20 mt-12">
+                <i data-lucide="chevron-down" class="w-8 h-8"></i>
+            </div>
+        </section>
+
+        <!-- EVENT INFORMATION -->
+        <section class="relative z-10 py-32 px-6">
+            <div class="max-w-4xl mx-auto space-y-24">
+                
+                <div class="text-center" data-aos="fade-up">
+                    <p class="font-arabic text-4xl mb-12 text-emerald-900 leading-loose">السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</p>
+                    <p class="text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto">
+                        Dengan rasa hormat dan kerendahan hati, kami mengundang Bapak/Ibu/Saudara(i) keluarga besar <strong>Keturunan KH. Abd Aziz</strong> untuk hadir pada acara Khaul sesepuh yang akan diselenggarakan pada:
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-10 rounded-[2.5rem] shadow-3d border-b-4 border-emerald-700 text-center" data-aos="fade-right">
+                        <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-800 mx-auto mb-6">
+                            <i data-lucide="calendar"></i>
+                        </div>
+                        <h5 class="text-[10px] font-black uppercase text-emerald-500 tracking-widest mb-1">Tanggal</h5>
+                        <p class="text-2xl font-bold text-slate-800">Rabu, 25</p>
+                        <p class="text-sm text-slate-400">Maret 2026</p>
+                    </div>
+
+                    <div class="bg-white p-10 rounded-[2.5rem] shadow-3d border-b-4 border-emerald-400 text-center" data-aos="fade-up">
+                        <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-800 mx-auto mb-6">
+                            <i data-lucide="clock"></i>
+                        </div>
+                        <h5 class="text-[10px] font-black uppercase text-emerald-500 tracking-widest mb-1">Waktu</h5>
+                        <p class="text-2xl font-bold text-slate-800">07:30 WIB</p>
+                        <p class="text-sm text-slate-400 italic">Hingga Selesai</p>
+                    </div>
+
+                    <div class="bg-emerald-900 p-10 rounded-[2.5rem] shadow-3d text-white text-center" data-aos="fade-left">
+                        <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-emerald-200 mx-auto mb-6">
+                            <i data-lucide="map-pin"></i>
+                        </div>
+                        <h5 class="text-[10px] font-bold uppercase text-emerald-300 tracking-widest mb-1">Lokasi</h5>
+                        <p class="text-lg font-bold leading-tight">Kediaman Ny. Siti Aminah & Ny. Hariyah</p>
+                    </div>
+                </div>
+
+                <!-- NAVIGATION BUTTON -->
+                <div class="text-center" data-aos="zoom-in">
+                    <p class="text-xs text-slate-400 font-bold tracking-widest mb-6 uppercase">Nungburung, Tambelangan, Sampang</p>
+                    <a href="https://maps.app.goo.gl/iCwwSAwj8E47onFR6" target="_blank" class="inline-flex items-center gap-4 bg-emerald-950 text-white px-12 py-5 rounded-2xl font-black tracking-widest text-sm shadow-2xl hover:bg-emerald-800 active:scale-95 transition-all">
+                        <i data-lucide="navigation-2" class="w-5 h-5"></i>
+                        BUKA GOOGLE MAPS
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="relative z-10 py-40 px-6 text-center bg-white border-t border-slate-50">
+            <div data-aos="fade-up">
+                <p class="font-arabic text-3xl text-emerald-900 mb-10">وَالسَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</p>
+                <p class="text-xs font-black text-slate-300 uppercase tracking-[0.5em] mb-4">Pihak Keluarga</p>
+                <h2 class="text-4xl md:text-6xl font-serif font-black text-emerald-950 mb-16 leading-tight">Keluarga Besar <br><span class="italic text-emerald-600">KH. Abd Aziz</span></h2>
+                
+                <div class="flex items-center justify-center gap-6 opacity-20">
+                    <span class="w-12 h-[1px] bg-slate-400"></span>
+                    <i data-lucide="heart" class="w-6 h-6 text-emerald-900 fill-current"></i>
+                    <span class="w-12 h-[1px] bg-slate-400"></span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        AOS.init({ duration: 1800, once: true });
+
+        const audio = document.getElementById('bgMusic');
+        const envelopeBody = document.getElementById('envelope-body');
+        const envelopeScreen = document.getElementById('envelope-screen');
+        const mainWrapper = document.getElementById('main-wrapper');
+        const musicIcon = document.getElementById('music-icon');
+        const defaultMusic = document.body.dataset.bgMusic;
+        const requestedMusic = new URLSearchParams(window.location.search).get('music');
+        const selectedMusic = (requestedMusic && requestedMusic.trim()) || defaultMusic;
+        const defaultVolume = 1.0;
+
+        audio.volume = defaultVolume;
+
+        if (selectedMusic) {
+            audio.src = /^https?:\/\//i.test(selectedMusic) ? selectedMusic : encodeURI(selectedMusic);
+            audio.load();
+        }
+
+        function triggerOpen() {
+            envelopeBody.classList.add('open');
+            
+            setTimeout(() => {
+                envelopeScreen.style.transform = 'translateY(-100%)';
+                mainWrapper.classList.add('is-visible');
+                document.body.style.overflow = 'auto';
+                
+                // Play background music after first user interaction
+                audio.play()
+                    .then(() => musicIcon.classList.add('animate-rotate'))
+                    .catch(() => console.log("Audio play blocked."));
+            }, 1800);
+        }
+
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                musicIcon.classList.add('animate-rotate');
+            } else {
+                audio.pause();
+                musicIcon.classList.remove('animate-rotate');
+            }
+        }
+
+        // Countdown Logic (March 25, 2026)
+        const target = new Date("March 25, 2026 07:30:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const gap = target - now;
+
+            if (gap < 0) return;
+
+            const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
+
+            document.getElementById("days").innerText = Math.floor(gap / day).toString().padStart(2, '0');
+            document.getElementById("hours").innerText = Math.floor((gap % day) / hour).toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = Math.floor((gap % hour) / minute).toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = Math.floor((gap % minute) / second).toString().padStart(2, '0');
+        }
+
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+    </script>
+</body>
+</html>
